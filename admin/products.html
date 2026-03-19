@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-startbar="dark" data-bs-theme="light">
+<head>
+    <meta charset="utf-8" />
+    <title>Product Management | SLZ GLOBAL Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="shortcut icon" href="assets/images/favicon.ico">
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+    <link href="assets/css/app.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+    
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --success-gradient: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            --warning-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --info-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        
+        .product-thumb {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .upload-area {
+            border: 2px dashed #dee2e6;
+            border-radius: 12px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: linear-gradient(145deg, #f8f9fa, #ffffff);
+        }
+        
+        .upload-area:hover, .upload-area.dragover {
+            border-color: #667eea;
+            background: linear-gradient(145deg, #e7f1ff, #f0f7ff);
+            transform: scale(1.01);
+        }
+        
+        .preview-image {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 12px;
+            margin-top: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .stats-card {
+            border-radius: 16px;
+            padding: 24px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+        
+        .stats-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stats-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+        }
+        
+        .stats-card h3 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+        
+        .stats-card p {
+            margin: 0;
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+        
+        .stats-card .icon {
+            font-size: 3rem;
+            opacity: 0.3;
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        .stats-card.primary { background: var(--primary-gradient); }
+        .stats-card.success { background: var(--success-gradient); }
+        .stats-card.warning { background: var(--warning-gradient); }
+        .stats-card.info { background: var(--info-gradient); }
+        
+        .product-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            border: 1px solid #eee;
+        }
+        
+        .product-card:hover {
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        
+        .product-card .product-info h6 {
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+        
+        .product-card .product-price {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #11998e;
+        }
+        
+        .product-card .product-category {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            background: #f0f7ff;
+            color: #667eea;
+        }
+        
+        .btn-action {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .btn-action:hover {
+            transform: scale(1.1);
+        }
+        
+        .search-box {
+            position: relative;
+        }
+        
+        .search-box input {
+            padding-left: 40px;
+            border-radius: 10px;
+            border: 2px solid #eee;
+            transition: all 0.3s;
+        }
+        
+        .search-box input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .search-box i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+        }
+        
+        .filter-btn {
+            border-radius: 20px;
+            padding: 6px 16px;
+            font-size: 0.85rem;
+            border: 2px solid #eee;
+            background: #fff;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .filter-btn:hover, .filter-btn.active {
+            border-color: #667eea;
+            background: #667eea;
+            color: #fff;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+        
+        .card-header {
+            background: transparent;
+            border-bottom: 1px solid #f0f0f0;
+            padding: 20px 24px;
+        }
+        
+        .card-body {
+            padding: 24px;
+        }
+        
+        .form-control, .form-select {
+            border-radius: 10px;
+            padding: 12px 16px;
+            border: 2px solid #eee;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .btn-primary {
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: 10px;
+            padding: 12px 24px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        
+        .empty-state i {
+            font-size: 80px;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+        
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+        }
+        
+        /* Edit Modal */
+        .modal-content {
+            border-radius: 16px;
+            border: none;
+        }
+        
+        .modal-header {
+            border-bottom: 1px solid #f0f0f0;
+            padding: 20px 24px;
+        }
+        
+        .modal-body {
+            padding: 24px;
+        }
+        
+        /* Quick Actions */
+        .quick-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        /* Loading skeleton */
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 8px;
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .stats-card h3 { font-size: 1.8rem; }
+            .product-card { flex-direction: column; text-align: center; }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Top Bar Start -->
+    <div class="topbar d-print-none">
+        <div class="container-fluid">
+            <nav class="topbar-custom d-flex justify-content-between" id="topbar-custom">
+                <ul class="topbar-item list-unstyled d-inline-flex align-items-center mb-0">
+                    <li>
+                        <button class="nav-link mobile-menu-btn nav-icon" id="togglemenu">
+                            <i class="iconoir-menu"></i>
+                        </button>
+                    </li>
+                    <li class="mx-3">
+                        <h5 class="mb-0 fw-bold">SLZ GLOBAL Admin</h5>
+                    </li>
+                </ul>
+                <ul class="topbar-item list-unstyled d-inline-flex align-items-center mb-0">
+                    <li class="topbar-item me-2">
+                        <span class="badge bg-success" id="connectionStatus">Connected</span>
+                    </li>
+                    <li class="topbar-item">
+                        <a class="nav-link nav-icon" href="javascript:void(0);" id="light-dark-mode">
+                            <i class="iconoir-half-moon dark-mode"></i>
+                            <i class="iconoir-sun-light light-mode"></i>
+                        </a>
+                    </li>
+                    <li class="dropdown topbar-item">
+                        <a class="nav-link dropdown-toggle arrow-none nav-icon" data-bs-toggle="dropdown" href="#" role="button">
+                            <img src="assets/images/users/avatar-1.jpg" alt="" class="thumb-md rounded-circle">
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end py-0">
+                            <div class="d-flex align-items-center dropdown-item py-3 bg-light">
+                                <div class="flex-grow-1 ms-2">
+                                    <h6 class="my-0 fw-bold" id="adminDisplayName">Admin</h6>
+                                    <small class="text-muted">Administrator</small>
+                                </div>
+                            </div>
+                            <div class="dropdown-divider mt-0"></div>
+                            <a class="dropdown-item py-2" href="../shop.html" target="_blank">
+                                <i class="iconoir-shop me-2"></i> View Shop
+                            </a>
+                            <a class="dropdown-item py-2 text-danger" href="#" onclick="logout()">
+                                <i class="iconoir-log-out me-2"></i> Logout
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Left Sidebar Start -->
+    <div class="startbar d-print-none">
+        <div class="brand">
+            <a href="products.html" class="logo">
+                <span><img src="assets/images/logo-sm.png" alt="logo" class="logo-sm"></span>
+                <span class="logo-lg fw-bold">SLZ GLOBAL</span>
+            </a>
+        </div>
+        <div class="startbar-menu">
+            <div class="startbar-collapse" id="startbarCollapse" data-simplebar>
+                <div class="d-flex align-items-start flex-column w-100">
+                    <ul class="navbar-nav mb-auto w-100">
+                        <li class="menu-label mt-2"><span>Dashboard</span></li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="products.html">
+                                <i class="iconoir-box menu-icon"></i>
+                                <span>Products</span>
+                            </a>
+                        </li>
+                        <li class="menu-label mt-3"><span>Quick Links</span></li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="../shop.html" target="_blank">
+                                <i class="iconoir-shop menu-icon"></i>
+                                <span>View Shop</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="../index.html" target="_blank">
+                                <i class="iconoir-home menu-icon"></i>
+                                <span>Homepage</span>
+                            </a>
+                        </li>
+                        <li class="menu-label mt-3"><span>Account</span></li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="logout()">
+                                <i class="iconoir-log-out menu-icon"></i>
+                                <span>Logout</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-wrapper">
+        <div class="page-content">
+            <div class="container-fluid">
+                <!-- Page Header -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h4 class="page-title mb-1">Product Management</h4>
+                                <p class="text-muted mb-0">Add, edit, and manage your furniture products</p>
+                            </div>
+                            <div>
+                                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProductModal">
+                                    <i class="iconoir-plus me-2"></i> Add Product
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="row mb-4">
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="stats-card primary">
+                            <p>Total Products</p>
+                            <h3 id="totalProducts">0</h3>
+                            <i class="iconoir-box icon"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="stats-card success">
+                            <p>Categories</p>
+                            <h3 id="totalCategories">0</h3>
+                            <i class="iconoir-folder icon"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="stats-card warning">
+                            <p>Total Value</p>
+                            <h3 id="totalValue">$0</h3>
+                            <i class="iconoir-dollar icon"></i>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="stats-card info">
+                            <p>Avg Price</p>
+                            <h3 id="avgPrice">$0</h3>
+                            <i class="iconoir-percentage icon"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Products List -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="row align-items-center">
+                                    <div class="col-md-4 mb-2 mb-md-0">
+                                        <div class="search-box">
+                                            <i class="iconoir-search"></i>
+                                            <input type="text" class="form-control" id="searchInput" placeholder="Search products...">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5 mb-2 mb-md-0">
+                                        <div class="d-flex gap-2 flex-wrap" id="categoryFilters">
+                                            <button class="filter-btn active" data-category="all">All</button>
+                                            <!-- Categories will be loaded dynamically -->
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 text-md-end">
+                                        <select class="form-select form-select-sm" id="sortSelect" style="width: auto; display: inline-block;">
+                                            <option value="newest">Newest First</option>
+                                            <option value="oldest">Oldest First</option>
+                                            <option value="price-high">Price: High to Low</option>
+                                            <option value="price-low">Price: Low to High</option>
+                                            <option value="name">Name: A-Z</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div id="productsContainer">
+                                    <!-- Loading skeleton -->
+                                    <div class="product-card">
+                                        <div class="d-flex align-items-center">
+                                            <div class="skeleton" style="width: 70px; height: 70px;"></div>
+                                            <div class="ms-3 flex-grow-1">
+                                                <div class="skeleton mb-2" style="width: 60%; height: 20px;"></div>
+                                                <div class="skeleton" style="width: 40%; height: 16px;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <footer class="footer text-center text-sm-start d-print-none">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card mb-0 rounded-bottom-0">
+                                <div class="card-body py-3">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <p class="text-muted mb-0">© 2026 SLZ GLOBAL Admin Panel</p>
+                                        <small class="text-muted">Last updated: <span id="lastUpdated">-</span></small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Add Product Modal -->
+    <div class="modal fade" id="addProductModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold">Add New Product</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="productForm">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold">Product Name *</label>
+                                    <input type="text" class="form-control" id="productName" required placeholder="e.g., Modern Wooden Chair">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold">Price (USD) *</label>
+                                    <input type="number" class="form-control" id="productPrice" required placeholder="0.00" step="0.01" min="0">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold">Category</label>
+                                    <select class="form-select" id="productCategory">
+                                        <option value="Furniture">Furniture</option>
+                                        <option value="Living Room">Living Room</option>
+                                        <option value="Bedroom">Bedroom</option>
+                                        <option value="Dining">Dining</option>
+                                        <option value="Office">Office</option>
+                                        <option value="Outdoor">Outdoor</option>
+                                        <option value="Decor">Decor</option>
+                                        <option value="Storage">Storage</option>
+                                        <option value="Lighting">Lighting</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold">Image URL (optional)</label>
+                                    <input type="url" class="form-control" id="productImageUrl" placeholder="https://example.com/image.jpg">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Description</label>
+                            <textarea class="form-control" id="productDesc" rows="3" placeholder="Enter a detailed product description..."></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Or Upload Image</label>
+                            <div class="upload-area" id="uploadArea">
+                                <input type="file" id="productImage" accept="image/*" hidden>
+                                <i class="iconoir-cloud-upload" style="font-size: 48px; color: #667eea;"></i>
+                                <p class="mb-1 mt-2 fw-semibold">Click or drag image here</p>
+                                <small class="text-muted">PNG, JPG up to 5MB</small>
+                            </div>
+                            <img id="imagePreview" class="preview-image" style="display: none;">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="submitBtn" onclick="addProduct()">
+                        <i class="iconoir-plus me-2"></i> Add Product
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Product Modal -->
+    <div class="modal fade" id="editProductModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold">Edit Product</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editProductForm">
+                        <input type="hidden" id="editProductId">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold">Product Name *</label>
+                                    <input type="text" class="form-control" id="editProductName" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold">Price (USD) *</label>
+                                    <input type="number" class="form-control" id="editProductPrice" required step="0.01" min="0">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold">Category</label>
+                                    <select class="form-select" id="editProductCategory">
+                                        <option value="Furniture">Furniture</option>
+                                        <option value="Living Room">Living Room</option>
+                                        <option value="Bedroom">Bedroom</option>
+                                        <option value="Dining">Dining</option>
+                                        <option value="Office">Office</option>
+                                        <option value="Outdoor">Outdoor</option>
+                                        <option value="Decor">Decor</option>
+                                        <option value="Storage">Storage</option>
+                                        <option value="Lighting">Lighting</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label fw-semibold">Image URL</label>
+                                    <input type="url" class="form-control" id="editProductImageUrl">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Description</label>
+                            <textarea class="form-control" id="editProductDesc" rows="3"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Current Image</label>
+                            <div>
+                                <img id="editImagePreview" class="preview-image" src="" style="max-height: 150px;">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="updateBtn" onclick="updateProduct()">
+                        <i class="iconoir-check me-2"></i> Update Product
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1">
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body text-center py-4">
+                    <i class="iconoir-trash" style="font-size: 48px; color: #f5576c;"></i>
+                    <h5 class="mt-3 mb-2">Delete Product?</h5>
+                    <p class="text-muted mb-0" id="deleteProductName">This action cannot be undone.</p>
+                    <input type="hidden" id="deleteProductId">
+                </div>
+                <div class="modal-footer justify-content-center border-0 pt-0">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" onclick="confirmDelete()">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/libs/simplebar/simplebar.min.js"></script>
+    <script src="assets/js/app.js"></script>
+
+    <script>
+        // Auth Check - Run first
+        (function() {
+            const user = localStorage.getItem('adminUser') || sessionStorage.getItem('adminUser');
+            console.log('Auth check - adminUser:', user);
+            
+            if (!user) {
+                console.log('No admin user found, redirecting to login...');
+                window.location.replace('login.html');
+            }
+        })();
+    </script>
+    <script>
+        // Supabase Configuration
+        const SUPABASE_URL = "https://wlwuntefesaxpzmjzend.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indsd3VudGVmZXNheHB6bWp6ZW5kIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4MzE5MDMsImV4cCI6MjA4OTQwNzkwM30.zpfHSJ0Tz8b95mZEiDBHCv5rUPzCAw2bxOal2vunfTU";
+        
+        const { createClient } = supabase;
+        const sbClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // State
+        let allProducts = [];
+        let currentFilter = 'all';
+        let currentSort = 'newest';
+        let selectedFile = null;
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem('adminUser');
+            sessionStorage.removeItem('adminUser');
+            window.location.href = 'login.html';
+        }
+
+        // Display admin name
+        const adminUser = localStorage.getItem('adminUser') || sessionStorage.getItem('adminUser');
+        if (adminUser) {
+            document.getElementById('adminDisplayName').textContent = adminUser;
+        }
+
+        // Toast notification
+        function showToast(message, type = 'success') {
+            const toastHtml = `
+                <div class="toast show align-items-center text-white bg-${type === 'success' ? 'success' : type === 'error' ? 'danger' : 'primary'}" role="alert">
+                    <div class="d-flex">
+                        <div class="toast-body">${message}</div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                    </div>
+                </div>
+            `;
+            const container = document.getElementById('toastContainer');
+            container.insertAdjacentHTML('beforeend', toastHtml);
+            setTimeout(() => {
+                container.firstElementChild?.remove();
+            }, 3000);
+        }
+
+        // Image upload handling
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('productImage');
+        const imagePreview = document.getElementById('imagePreview');
+
+        uploadArea.addEventListener('click', () => fileInput.click());
+        uploadArea.addEventListener('dragover', (e) => { e.preventDefault(); uploadArea.classList.add('dragover'); });
+        uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            if (e.dataTransfer.files[0]?.type.startsWith('image/')) handleFileSelect(e.dataTransfer.files[0]);
+        });
+        fileInput.addEventListener('change', (e) => { if (e.target.files[0]) handleFileSelect(e.target.files[0]); });
+
+        function handleFileSelect(file) {
+            if (file.size > 5 * 1024 * 1024) { showToast('File size must be less than 5MB', 'error'); return; }
+            selectedFile = file;
+            const reader = new FileReader();
+            reader.onload = (e) => { imagePreview.src = e.target.result; imagePreview.style.display = 'block'; };
+            reader.readAsDataURL(file);
+        }
+
+        // Upload image to Supabase Storage
+        async function uploadImage(file) {
+            try {
+                const fileExt = file.name.split('.').pop();
+                const fileName = `${Date.now()}_${Math.random().toString(36).substr(2, 9)}.${fileExt}`;
+                
+                console.log('Uploading image:', fileName);
+                
+                const { data, error } = await sbClient.storage
+                    .from('product-images')
+                    .upload(`products/${fileName}`, file, {
+                        cacheControl: '3600',
+                        upsert: false
+                    });
+                
+                if (error) {
+                    console.error('Upload error:', error);
+                    showToast('Image upload failed: ' + error.message + '. Using placeholder instead.', 'error');
+                    return null;
+                }
+                
+                const { data: urlData } = sbClient.storage
+                    .from('product-images')
+                    .getPublicUrl(`products/${fileName}`);
+                
+                console.log('Upload success, URL:', urlData.publicUrl);
+                return urlData.publicUrl;
+            } catch (err) {
+                console.error('Upload exception:', err);
+                showToast('Image upload error. Using placeholder.', 'error');
+                return null;
+            }
+        }
+
+        // Add product
+        async function addProduct() {
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Adding...';
+
+            try {
+                const name = document.getElementById('productName').value.trim();
+                const price = parseFloat(document.getElementById('productPrice').value);
+                const category = document.getElementById('productCategory').value;
+                const description = document.getElementById('productDesc').value.trim();
+                let imageUrl = document.getElementById('productImageUrl').value.trim();
+
+                if (!name || isNaN(price)) throw new Error('Name and price are required');
+
+                // Try to upload image if file selected
+                if (selectedFile) {
+                    showToast('Uploading image...', 'info');
+                    const uploaded = await uploadImage(selectedFile);
+                    if (uploaded) {
+                        imageUrl = uploaded;
+                    }
+                }
+
+                // Use placeholder if no image URL
+                if (!imageUrl) {
+                    imageUrl = `https://via.placeholder.com/400x400/667eea/ffffff?text=${encodeURIComponent(name)}`;
+                }
+
+                const { error } = await sbClient.from('products').insert([{ name, price, category, description, image_url: imageUrl }]);
+                if (error) throw error;
+
+                // Reset & close modal
+                document.getElementById('productForm').reset();
+                selectedFile = null;
+                imagePreview.style.display = 'none';
+                bootstrap.Modal.getInstance(document.getElementById('addProductModal')).hide();
+                
+                showToast('Product added successfully!');
+                await loadProducts();
+
+            } catch (error) {
+                showToast('Error: ' + error.message, 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="iconoir-plus me-2"></i> Add Product';
+            }
+        }
+
+        // Load products
+        async function loadProducts() {
+            try {
+                const { data, error } = await sbClient.from('products').select('*').order('created_at', { ascending: false });
+                if (error) throw error;
+                
+                allProducts = data || [];
+                updateStats();
+                updateCategoryFilters();
+                renderProducts();
+                document.getElementById('lastUpdated').textContent = new Date().toLocaleTimeString();
+                
+            } catch (error) {
+                document.getElementById('productsContainer').innerHTML = `
+                    <div class="alert alert-danger">Error loading products: ${error.message}</div>
+                `;
+            }
+        }
+
+        // Update stats
+        function updateStats() {
+            const total = allProducts.length;
+            const categories = [...new Set(allProducts.map(p => p.category))].length;
+            const totalValue = allProducts.reduce((sum, p) => sum + (p.price || 0), 0);
+            const avgPrice = total > 0 ? totalValue / total : 0;
+
+            document.getElementById('totalProducts').textContent = total;
+            document.getElementById('totalCategories').textContent = categories;
+            document.getElementById('totalValue').textContent = '$' + totalValue.toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0});
+            document.getElementById('avgPrice').textContent = '$' + avgPrice.toFixed(0);
+        }
+
+        // Update category filters
+        function updateCategoryFilters() {
+            const categories = [...new Set(allProducts.map(p => p.category).filter(Boolean))];
+            const container = document.getElementById('categoryFilters');
+            container.innerHTML = `<button class="filter-btn ${currentFilter === 'all' ? 'active' : ''}" data-category="all">All</button>`;
+            categories.forEach(cat => {
+                container.innerHTML += `<button class="filter-btn ${currentFilter === cat ? 'active' : ''}" data-category="${cat}">${cat}</button>`;
+            });
+            
+            // Add click handlers
+            container.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    currentFilter = btn.dataset.category;
+                    container.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    renderProducts();
+                });
+            });
+        }
+
+        // Render products
+        function renderProducts() {
+            const container = document.getElementById('productsContainer');
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            let filtered = allProducts.filter(p => {
+                const matchesSearch = p.name.toLowerCase().includes(searchTerm) || 
+                                     (p.description && p.description.toLowerCase().includes(searchTerm));
+                const matchesCategory = currentFilter === 'all' || p.category === currentFilter;
+                return matchesSearch && matchesCategory;
+            });
+
+            // Sort
+            const sortValue = document.getElementById('sortSelect').value;
+            switch(sortValue) {
+                case 'oldest': filtered.sort((a, b) => new Date(a.created_at) - new Date(b.created_at)); break;
+                case 'price-high': filtered.sort((a, b) => b.price - a.price); break;
+                case 'price-low': filtered.sort((a, b) => a.price - b.price); break;
+                case 'name': filtered.sort((a, b) => a.name.localeCompare(b.name)); break;
+                default: filtered.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+            }
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="iconoir-box"></i>
+                        <h5>No products found</h5>
+                        <p class="text-muted">Try adjusting your search or filter</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filtered.map(p => `
+                <div class="product-card" id="product-${p.id}">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center">
+                            <img src="${p.image_url || 'https://via.placeholder.com/70'}" 
+                                 alt="${p.name}" 
+                                 class="product-thumb"
+                                 onerror="this.src='https://via.placeholder.com/70'">
+                            <div class="ms-3 product-info">
+                                <h6>${p.name}</h6>
+                                <span class="product-category">${p.category || 'Furniture'}</span>
+                                <p class="product-price mb-0">$${p.price.toFixed(2)}</p>
+                            </div>
+                        </div>
+                        <div class="quick-actions">
+                            <button class="btn btn-action btn-outline-primary" onclick="editProduct(${p.id})" title="Edit">
+                                <i class="iconoir-edit-pencil"></i>
+                            </button>
+                            <button class="btn btn-action btn-outline-danger" onclick="deleteProduct(${p.id}, '${p.name.replace(/'/g, "\\'")}')" title="Delete">
+                                <i class="iconoir-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Edit product
+        function editProduct(id) {
+            const product = allProducts.find(p => p.id === id);
+            if (!product) return;
+
+            document.getElementById('editProductId').value = id;
+            document.getElementById('editProductName').value = product.name;
+            document.getElementById('editProductPrice').value = product.price;
+            document.getElementById('editProductCategory').value = product.category || 'Furniture';
+            document.getElementById('editProductDesc').value = product.description || '';
+            document.getElementById('editProductImageUrl').value = product.image_url || '';
+            document.getElementById('editImagePreview').src = product.image_url || 'https://via.placeholder.com/150';
+
+            new bootstrap.Modal(document.getElementById('editProductModal')).show();
+        }
+
+        // Update product
+        async function updateProduct() {
+            const updateBtn = document.getElementById('updateBtn');
+            updateBtn.disabled = true;
+            updateBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Updating...';
+
+            try {
+                const id = document.getElementById('editProductId').value;
+                const name = document.getElementById('editProductName').value.trim();
+                const price = parseFloat(document.getElementById('editProductPrice').value);
+                const category = document.getElementById('editProductCategory').value;
+                const description = document.getElementById('editProductDesc').value.trim();
+                const imageUrl = document.getElementById('editProductImageUrl').value.trim();
+
+                if (!name || isNaN(price)) throw new Error('Name and price are required');
+
+                const { error } = await sbClient.from('products').update({
+                    name, price, category, description, image_url: imageUrl
+                }).eq('id', id);
+
+                if (error) throw error;
+
+                bootstrap.Modal.getInstance(document.getElementById('editProductModal')).hide();
+                showToast('Product updated successfully!');
+                await loadProducts();
+
+            } catch (error) {
+                showToast('Error: ' + error.message, 'error');
+            } finally {
+                updateBtn.disabled = false;
+                updateBtn.innerHTML = '<i class="iconoir-check me-2"></i> Update Product';
+            }
+        }
+
+        // Delete product
+        function deleteProduct(id, name) {
+            document.getElementById('deleteProductId').value = id;
+            document.getElementById('deleteProductName').textContent = `"${name}" will be permanently deleted.`;
+            new bootstrap.Modal(document.getElementById('deleteModal')).show();
+        }
+
+        async function confirmDelete() {
+            const id = document.getElementById('deleteProductId').value;
+            try {
+                const { error } = await sbClient.from('products').delete().eq('id', id);
+                if (error) throw error;
+
+                bootstrap.Modal.getInstance(document.getElementById('deleteModal')).hide();
+                showToast('Product deleted successfully!');
+                await loadProducts();
+
+            } catch (error) {
+                showToast('Error: ' + error.message, 'error');
+            }
+        }
+
+        // Event listeners
+        document.getElementById('searchInput').addEventListener('input', renderProducts);
+        document.getElementById('sortSelect').addEventListener('change', renderProducts);
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', loadProducts);
+    </script>
+</body>
+</html>

@@ -1,0 +1,399 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>SLZ GLOBAL - Furniture Shop</title>
+    <meta name="description" content="Browse our collection of high-quality furniture. Order via email for personalized service." />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    
+    <!-- Favicon -->
+    <link rel="icon" href="assets/images/favicon/favicon.png" sizes="32x32" />
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="assets/css/vendor/vendor.min.css" />
+    <link rel="stylesheet" href="assets/css/plugins/plugins.min.css" />
+    <link rel="stylesheet" href="assets/css/style.min.css">
+    
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+</head>
+
+<body>
+    <!-- Header Area start  -->
+    <div class="header section">
+        <!-- Header Top Message Start -->
+        <div class="header-top section-fluid bg-black">
+            <div class="container">
+                <div class="row row-cols-lg-2 align-items-center">
+                    <div class="col text-center text-lg-start">
+                        <div class="header-top-massege">
+                            <p>Welcome to SLZ GLOBAL Furniture - Order via Email!</p>
+                        </div>
+                    </div>
+                    <div class="col d-none d-lg-block">
+                        <div class="header-top-set-lan-curr d-flex justify-content-end">
+                            <div class="header-top-curr dropdown">
+                                <button class="dropdown-toggle pr-0 border-0" data-bs-toggle="dropdown">Currency : (USD)
+                                    <i class="ion-ios-arrow-down"></i></button>
+                                <ul class="dropdown-menu dropdown-menu-right">
+                                    <li><a class="dropdown-item" href="#">USD $</a></li>
+                                    <li><a class="dropdown-item" href="#">EUR €</a></li>
+                                    <li><a class="dropdown-item" href="#">GBP £</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Header Top End -->
+        
+        <!-- Header Bottom Start -->
+        <div class="header-bottom d-none d-lg-block">
+            <div class="container position-relative">
+                <div class="row align-self-center">
+                    <div class="col-auto align-self-center">
+                        <div class="header-logo">
+                            <a href="index.html"><img src="assets/images/logo/logo.png" alt="SLZ GLOBAL" /></a>
+                        </div>
+                    </div>
+                    <div class="col align-self-center">
+                        <div class="header-actions">
+                            <div class="header_account_list">
+                                <a href="javascript:void(0)" class="header-action-btn search-btn"><i class="icon-magnifier"></i></a>
+                                <div class="dropdown_search">
+                                    <form class="action-form" onsubmit="searchProducts(event)">
+                                        <input class="form-control" placeholder="Search products..." type="text" id="searchInput">
+                                        <button class="submit" type="submit"><i class="icon-magnifier"></i></button>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="header-bottom-set dropdown">
+                                <button class="dropdown-toggle header-action-btn" data-bs-toggle="dropdown"><i class="icon-user"></i></button>
+                                <ul class="dropdown-menu dropdown-menu-right">
+                                    <li><a class="dropdown-item" href="contact.html">Contact Us</a></li>
+                                    <li><a class="dropdown-item" href="about.html">About Us</a></li>
+                                </ul>
+                            </div>
+                            <a href="#offcanvas-mobile-menu" class="header-action-btn header-action-btn-menu offcanvas-toggle d-lg-none">
+                                <i class="icon-menu"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Header Bottom End -->
+        
+        <!-- Mobile Header -->
+        <div class="header-bottom d-lg-none sticky-nav bg-white">
+            <div class="container position-relative">
+                <div class="row align-self-center">
+                    <div class="col-auto align-self-center">
+                        <div class="header-logo">
+                            <a href="index.html"><img src="assets/images/logo/logo.png" alt="SLZ GLOBAL" /></a>
+                        </div>
+                    </div>
+                    <div class="col align-self-center">
+                        <div class="header-actions">
+                            <a href="#offcanvas-mobile-menu" class="header-action-btn header-action-btn-menu offcanvas-toggle d-lg-none">
+                                <i class="icon-menu"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+                        <!-- Main Menu Start -->
+        <div class="bg-black d-none d-lg-block sticky-nav">
+            <div class="container position-relative">
+                <div class="row">
+                    <div class="col-md-12 align-self-center">
+                        <div class="main-menu">
+                            <ul>
+                                <li><a href="index.html">Home</a></li>
+                                <li><a href="about.html">About us</a></li>
+                                <li><a href="shop.html">Shop</a></li>
+                                <li><a href="contact.html">Contact us</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Main Menu End -->
+    </div>
+    <!-- Header Area End  -->
+
+    <!-- OffCanvas Menu Start -->
+    <div id="offcanvas-mobile-menu" class="offcanvas offcanvas-mobile-menu">
+        <button class="offcanvas-close"></button>
+        <div class="inner customScroll">
+            <div class="offcanvas-menu mb-20px">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="shop.html">Shop</a></li>
+                    <li><a href="contact.html">Contact Us</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- OffCanvas Menu End -->
+
+    <div class="offcanvas-overlay"></div>
+
+    <!-- Breadcrumb Area Start -->
+    <div class="breadcrumb-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="row breadcrumb_box align-items-center">
+                        <div class="col-lg-6 col-md-6 col-sm-12 text-center text-md-start">
+                            <h2 class="breadcrumb-title">Our Furniture Collection</h2>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <ul class="breadcrumb-list text-center text-md-end">
+                                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                               
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Breadcrumb Area End -->
+
+    <!-- Shop Category Area -->
+    <div class="shop-category-area pb-100px pt-70px">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-md-12">
+                    <!-- Shop Top Area Start -->
+                    <div class="shop-top-bar d-flex">
+                        <p id="product-count">Loading products...</p>
+                        <div class="select-shoing-wrap d-flex align-items-center">
+                            <div class="shot-product">
+                                <p>Sort By:</p>
+                            </div>
+                            <div class="shop-select">
+                                <select class="shop-sort" id="sortSelect" onchange="sortProducts()">
+                                    <option value="newest">Newest First</option>
+                                    <option value="name-asc">Name, A to Z</option>
+                                    <option value="name-desc">Name, Z to A</option>
+                                    <option value="price-low">Price, Low to High</option>
+                                    <option value="price-high">Price, High to Low</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Shop Top Area End -->
+
+                    <!-- Shop Bottom Area Start -->
+                    <div class="shop-bottom-area">
+                        <div class="row" id="products-container">
+                            <!-- Products will be loaded here dynamically -->
+                            <div class="col-12 text-center py-5">
+                                <p>Loading products...</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Shop Bottom Area End -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Area Start -->
+    <div class="footer-area">
+        <div class="footer-container">
+            <div class="footer-top">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-6 col-lg-4 mb-md-30px mb-lm-30px" data-aos="fade-up" data-aos-delay="200">
+                            <div class="single-wedge">
+                                <h4 class="footer-herading">About Us</h4>
+                                <p class="about-text">SLZ GLOBAL offers premium furniture for your home and office. Browse our collection and place orders via email for personalized service.</p>
+                                <ul class="link-follow">
+                                    <li class="li"><a class="twitter icon-social-twitter" title="Twitter" href="#"></a></li>
+                                    <li class="li"><a class="pinterest icon-social-pinterest" title="Pinterest" href="#"></a></li>
+                                    <li class="li"><a class="linkedin icon-social-linkedin" title="LinkedIn" href="#"></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-lg-3 mb-md-30px mb-lm-30px" data-aos="fade-up" data-aos-delay="400">
+                            <div class="single-wedge">
+                                <h4 class="footer-herading">Quick Links</h4>
+                                <div class="footer-links">
+                                    <div class="footer-row">
+                                        <ul class="align-items-center">
+                                            <li class="li"><a class="single-link" href="shop.html">Shop All</a></li>
+                                            <li class="li"><a class="single-link" href="about.html">About Us</a></li>
+                                            <li class="li"><a class="single-link" href="contact.html">Contact Us</a></li>
+                                            <li class="li"><a class="single-link" href="privacy-policy.html">Privacy Policy</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-2 col-sm-6 mb-lm-30px" data-aos="fade-up" data-aos-delay="600">
+                            <div class="single-wedge">
+                                <h4 class="footer-herading">How to Order</h4>
+                                <div class="footer-links">
+                                    <div class="footer-row">
+                                        <ul class="align-items-center">
+                                            <li class="li">1. Browse Products</li>
+                                            <li class="li">2. Click View Details</li>
+                                            <li class="li">3. Fill Order Form</li>
+                                            <li class="li">4. Send via Email</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-3" data-aos="fade-up" data-aos-delay="800">
+                            <div class="single-wedge">
+                                <h4 class="footer-herading">Contact Info</h4>
+                                <div class="footer-links">
+                                    <p><i class="ion-ios-email"></i> orders@slzglobal.com</p>
+                                    <p><i class="ion-ios-telephone"></i> +1 234 567 8900</p>
+                                    <p><i class="ion-ios-location"></i> 123 Furniture Street</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12 text-center">
+                            <p class="copy-text">© 2026 <strong>SLZ GLOBAL</strong> - All Rights Reserved</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer Area End -->
+
+    <!-- Vendor JS -->
+    <script src="assets/js/vendor/vendor.min.js"></script>
+    <script src="assets/js/plugins/plugins.min.js"></script>
+    <script src="assets/js/main.js"></script>
+    
+    <!-- Supabase Configuration -->
+    <script src="assets/js/supabase-config.js"></script>
+    <script src="assets/js/product-service.js"></script>
+    
+    <script>
+        // Store all products for filtering/sorting
+        let allProducts = [];
+        
+        // Load products when page loads
+        document.addEventListener('DOMContentLoaded', async function() {
+            await loadProducts();
+        });
+        
+        // Load products from Supabase
+        async function loadProducts() {
+            const container = document.getElementById('products-container');
+            const countElement = document.getElementById('product-count');
+            
+            try {
+                const result = await ProductService.getAllProducts();
+                
+                if (result.success && result.data.length > 0) {
+                    allProducts = result.data;
+                    displayProducts(allProducts);
+                    countElement.textContent = `There Are ${allProducts.length} Products.`;
+                } else if (result.success && result.data.length === 0) {
+                    container.innerHTML = `
+                        <div class="col-12 text-center py-5">
+                            <h4>No products available yet</h4>
+                            <p>Check back soon for our latest furniture collection!</p>
+                        </div>
+                    `;
+                    countElement.textContent = 'There Are 0 Products.';
+                } else {
+                    throw new Error(result.error);
+                }
+            } catch (error) {
+                console.error('Error loading products:', error);
+                container.innerHTML = `
+                    <div class="col-12 text-center py-5">
+                        <h4>Unable to load products</h4>
+                        <p>Please try again later.</p>
+                    </div>
+                `;
+            }
+        }
+        
+        // Display products in grid
+        function displayProducts(products) {
+            const container = document.getElementById('products-container');
+            
+            if (products.length === 0) {
+                container.innerHTML = `
+                    <div class="col-12 text-center py-5">
+                        <h4>No products found</h4>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = products.map(product => generateProductCard(product)).join('');
+        }
+        
+        // Sort products
+        function sortProducts() {
+            const sortValue = document.getElementById('sortSelect').value;
+            let sorted = [...allProducts];
+            
+            switch(sortValue) {
+                case 'name-asc':
+                    sorted.sort((a, b) => a.name.localeCompare(b.name));
+                    break;
+                case 'name-desc':
+                    sorted.sort((a, b) => b.name.localeCompare(a.name));
+                    break;
+                case 'price-low':
+                    sorted.sort((a, b) => a.price - b.price);
+                    break;
+                case 'price-high':
+                    sorted.sort((a, b) => b.price - a.price);
+                    break;
+                case 'newest':
+                default:
+                    sorted.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+            }
+            
+            displayProducts(sorted);
+        }
+        
+        // Search products
+        function searchProducts(event) {
+            event.preventDefault();
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+            
+            if (!searchTerm) {
+                displayProducts(allProducts);
+                document.getElementById('product-count').textContent = `There Are ${allProducts.length} Products.`;
+                return;
+            }
+            
+            const filtered = allProducts.filter(product => 
+                product.name.toLowerCase().includes(searchTerm) ||
+                (product.description && product.description.toLowerCase().includes(searchTerm)) ||
+                (product.category && product.category.toLowerCase().includes(searchTerm))
+            );
+            
+            displayProducts(filtered);
+            document.getElementById('product-count').textContent = `Found ${filtered.length} Products.`;
+        }
+    </script>
+</body>
+</html>
